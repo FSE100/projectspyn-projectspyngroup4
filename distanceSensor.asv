@@ -1,0 +1,34 @@
+
+distanceSensorPort = 3;
+while true
+    distance1 = brick.UltrasonicDist(3);
+    if distance1 < 3
+        brick.MoveMotorAngleRel('B',50,-30,'Brake');
+    else
+        brick.MoveMotor('DB', -100);
+    end
+    
+    if distance1 > 7 || distance1 < 10
+        brick.MoveMotorAngleRel('D',50,-30,'Brake');
+    else
+        brick.MoveMotor('DB', -100);
+    end
+    
+    if distance1  5
+        brick.MoveMotor('DB', -100);
+    end
+    
+    if distance1 >=10
+        brick.MoveMotorAngleRel('B',50,-180,'Brake');
+    end
+    if(buttonPressed == 1)
+        brick.StopMotor('BD');
+        brick.MoveMotor('BD', 50);
+        pause(1);
+        brick.MoveMotorAngleRel('D',50, 90,'Brake');
+        %brick.MoveMotor('BD',-50);
+        %break %%remove this break but its convenient for now
+    end
+end
+
+
