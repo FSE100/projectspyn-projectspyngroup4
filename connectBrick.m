@@ -1,1 +1,1 @@
-brick = ConnectBrick('GROUP11ZACH');
+brick = ConnectBrick('ICARUS');
