@@ -1,9 +1,11 @@
+clearvars -except brick;
 %brick.StopMotor('BD');
 distanjceSensorPort = 3;
 lockClose = true;
 lockFar = true;
+
 drive = false;
-%brick.SetColorMode(1, 2);  
+
 global key;
 InitKeyboard();
 while 1
@@ -43,10 +45,10 @@ while 1
             brick.MoveMotor('BD', 50); %BACKUP
             pause(.75);
             brick.StopMotor('BD'); %STOP
-            pause(.25);
+            pause(.75);
            
             brick.MoveMotor('D', -50);
-            pause(1.5);
+            pause(1.2);
             brick.StopMotor('D');
             %pause(3); %IDK BUT IT BREAKS WITHOUT IT
             disp("end button pressed");
@@ -54,46 +56,64 @@ while 1
         %DRIVE AUTONOMOUSLY    
         elseif (buttonPressed == 0)
             brick.MoveMotor('DB', -75);
-            if (distance < 4 && lockClose == true) %%Nudge left if too close
-                brick.MoveMotorAngleRel('B',25,-2,'Brake');
-                lockClose = false;
-                lockFar = true;
-                disp("Too close: correcting");
-            elseif (distance > 9  && distance < 20  && lockFar == true) %%Nudge left if too far
-                brick.MoveMotorAngleRel('D',25,-2,'Brake');
-                lockFar = false;
-                lockClose = true;
-                disp("Too far: correcting");
-            %{
-            elseif distance > 27 %%180 turn
+            if distance > 29 %%180 turn
                 lockFar = false;
                 lockClose = false;
                 disp("180 degree starting");
-                
+
                 brick.StopMotor('BD');
-                pause(.75);
+                pause(1.5);
+
+
+
+                brick.MoveMotor('DB', -50); %Move forward a little
+                pause(.9);
+                brick.StopMotor('BD');
+
+
+                brick.MoveMotor('D', 50); %Turn 90
+                pause(1.3);
+                brick.StopMotor('D');
+
+                brick.MoveMotor('DB', -50); %Move forward a little
+                pause(2.25);
+                brick.StopMotor('BD');
+
+                brick.MoveMotor('D', 50); %Turn 90
+                pause(1.2);
+                brick.StopMotor('D');
+
                 brick.MoveMotor('DB', -50); %Move forward a little
                 pause(.75);
                 brick.StopMotor('BD');
-                brick.MoveMotorAngleRel('D',200, 180,'Brake'); %Turn 180
-                pause(3);
-                brick.MoveMotor('DB', -50); %Move forward a little
-                pause(.75);
-                brick.StopMotor('BD');
-                brick.MoveMotorAngleRel('D',200, 180,'Brake'); %Turn 180
-                pause(3);
+
                 lockFar = true;
                 lockClose = true;
                 %brick.MoveMotorAngleRel('B',50,-360,'Brake');
-            %}
+                
+             elseif (distance < 6 && lockClose == true) %%Nudge left if too close
+                brick.MoveMotorAngleRel('B',1,-.01,'Brake');
+                lockClose = false;
+                lockFar = true;
+                disp("Too close: correcting");
+                
+            elseif (distance > 9  && distance < 29  && lockFar == true) %%Nudge left if too far
+                brick.MoveMotorAngleRel('D',1,-.01,'Brake');
+                lockFar = false;
+                lockClose = true;
+                disp("Too far: correcting");
+           
+           
+           
             end
         end
     end
 
     %COLOR SENSING BEHVAIOR: SET DRIVE = FALSE FOR EACH BEHAVIOR AND IT
     %WILL STOP DRIVING
-    
-    %color = brick.ColorCode(1);  
+    brick.SetColorMode(1, 2);
+    color = brick.ColorCode(1);
+    %disp(color);
 
         %if color ==  5
          %   brick.MoveMotor('DB', 'Brake');
@@ -110,9 +130,10 @@ while 1
        % break;
        % end
 
-       % if color ==3
-        %break;
-       % end
+    if color == 3
+        disp("color is green");
+        drive = false;
+    end
 
     
 end
