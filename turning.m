@@ -13,7 +13,6 @@ InitKeyboard();
 autoDrive = false;
 lock180 = false;
 passengerEntered = false;
-
 %Continous Loop
 while 1
     %--VARIABLE UPDATING--
@@ -50,6 +49,7 @@ while 1
             if(autoDrive == false)
                 brick.StopMotor('ABCD');
             end
+            
     end
     
     %--AUTOMATIC DRIVING BEHAVIOR--
@@ -66,7 +66,7 @@ while 1
         brick.StopMotor('BD');
         %Backup
         brick.MoveMotor('BD', 50);
-        pause(.4);
+        pause(.6);
         brick.StopMotor('BD');
         %Turn 90 degrees left
         brick.MoveMotor('D', -50);
@@ -78,8 +78,8 @@ while 1
   
     %If the car is too close to a wall, increase the right motor speed to
     %turn away
-    if (distance < 4 && autoDrive == true) %Nudge too close 
-        brick.MoveMotor('D', -60); 
+    if (distance < 5 && autoDrive == true) %Nudge too close 
+        brick.MoveMotor('D', -65); 
         lock180 = false;
         
     %If the car is too far away from a wall, increase the left motor speed
@@ -112,41 +112,11 @@ while 1
             pause(.25);
         end
         %----
-       brick.MoveMotor('D', -35);
-        brick.MoveMotor('B', -200);
-        pause(.25);
-        brick.StopMotor('DB');
-        pause(1.2);
-        disp("color" + color);
-        color = brick.ColorCode(1);
-        if( color == 5)
-            disp("mid turn color is red");
-            brick.StopMotor('DB');
-            pause(5);
-            brick.MoveMotor('DB', -50); %Move forward a little
-            pause(.25);
-        end
-        %----
         brick.MoveMotor('D', -35);
         brick.MoveMotor('B', -200);
         pause(.25);
         brick.StopMotor('DB');
         pause(1.2);
-        disp("color" + color);
-        color = brick.ColorCode(1);
-        if( color == 5)
-            disp("mid turn color is red");
-            brick.StopMotor('DB');
-            pause(5);
-            brick.MoveMotor('DB', -50); %Move forward a little
-            pause(.25);
-        end
-        %----
-        brick.MoveMotor('D', -35);
-        brick.MoveMotor('B', -200);
-        pause(.6);
-        brick.StopMotor('DB');
-        pause(.3);
         disp("color" + color);
         color = brick.ColorCode(1);
         if(color == 5)
@@ -156,23 +126,55 @@ while 1
             brick.MoveMotor('DB', -50); %Move forward a little
             pause(.25);
         end
-        %----
-        brick.MoveMotor('D', -35);
-        brick.MoveMotor('B', -200);
-        pause(.6);
-        brick.StopMotor('DB');
-        pause(.3);
-        disp("color" + color);
-        color = brick.ColorCode(1);
-        if( color == 5)
-            disp("mid turn color is red");
-            brick.StopMotor('DB');
-            pause(5);
-            brick.MoveMotor('DB', -50); %Move forward a little
+        distance = brick.UltrasonicDist(3);
+        if(distance > 20)
+            %----
+            brick.MoveMotor('D', -35);
+            brick.MoveMotor('B', -200);
             pause(.25);
+            brick.StopMotor('DB');
+            pause(1.2);
+            disp("color" + color);
+            color = brick.ColorCode(1);
+            if( color == 5)
+                disp("mid turn color is red");
+                brick.StopMotor('DB');
+                pause(5);
+                brick.MoveMotor('DB', -50); %Move forward a little
+                pause(.25);
+            end
+            %----
+            brick.MoveMotor('D', -35);
+            brick.MoveMotor('B', -200);
+            pause(.6);
+            brick.StopMotor('DB');
+            pause(.3);
+            disp("color" + color);
+            color = brick.ColorCode(1);
+            if(color == 5)
+                disp("mid turn color is red");
+                brick.StopMotor('DB');
+                pause(5);
+                brick.MoveMotor('DB', -50); %Move forward a little
+                pause(.25);
+            end
+            %----
+            brick.MoveMotor('D', -35);
+            brick.MoveMotor('B', -200);
+            pause(.6);
+            brick.StopMotor('DB');
+            pause(.3);
+            disp("color" + color);
+            color = brick.ColorCode(1);
+            if( color == 5)
+                disp("mid turn color is red");
+                brick.StopMotor('DB');
+                pause(5);
+                brick.MoveMotor('DB', -50); %Move forward a little
+                pause(.25);
+            end
+            %----
         end
-        %----
-        
         %Return to normal driving
         autoDrive = true;
     end
@@ -187,16 +189,15 @@ while 1
         brick.MoveMotor('DB', -50); %Move forward a little
         pause(.5);
         lock180 = false;
+   
     %If color is blue, switch to manual control
     elseif color==2
         autoDrive = false;
-        passengerEntered = true;
-        brick.StopMotor('BD');
+        passengerEntered = true;                 
     %If color is green and passenger is in the car, switch to manual
     %control
     elseif (color == 3 && passengerEntered == true)
         autoDrive = false;
-        brick.StopMotor('BD');
     end
 end
 CloseKeyboard();
